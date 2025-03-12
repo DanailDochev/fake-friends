@@ -118,63 +118,57 @@ function UploadPage() {
       <div className="upload-section">
         <h1>Upload Follower Lists</h1>
         <p>Upload your Instagram followers HTML files to find who unfollowed you</p>
-        
+      </div>
+      
+      <div className="upload-areas-container">
         <div className="file-upload-area">
+          <h3>Old Followers List</h3>
           <input
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}
             accept=".html"
-            multiple
             className="file-input"
-            id="file-input"
+            id="file-input-old"
           />
-          <label htmlFor="file-input" className="file-input-label">
-            Choose Files
+          <label htmlFor="file-input-old" className="file-input-label">
+            Choose Old File
           </label>
-          <p className="upload-help">
-            Select the followers.html files from your Instagram data downloads
-          </p>
+          {/* Show selected file name if exists */}
+          {files[0] && <div className="selected-file">{files[0].name}</div>}
         </div>
-        
-        {files.length > 0 && (
-          <div className="uploaded-files">
-            <h3>Uploaded Files ({files.length})</h3>
-            <ul className="file-list">
-              {files.map((file, index) => (
-                <li key={index} className="file-item">
-                  <span>{file.name}</span>
-                  <span className="file-date">
-                    {new Date(file.lastModified).toLocaleDateString()}
-                  </span>
-                  <button 
-                    onClick={() => removeFile(index)}
-                    className="remove-file-btn"
-                  >
-                    ✕
-                  </button>
-                </li>
-              ))}
-            </ul>
-            
-            <button 
-              onClick={processFiles} 
-              disabled={isProcessing || files.length < 2} 
-              className="process-button"
-            >
-              {isProcessing ? 'Processing...' : 'Find Unfollowers'}
-            </button>
-          </div>
-        )}
-        
-        {error && <div className="error-message">{error}</div>}
+
+        <div className="file-upload-area">
+          <h3>New Followers List</h3>
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept=".html"
+            className="file-input"
+            id="file-input-new"
+          />
+          <label htmlFor="file-input-new" className="file-input-label">
+            Choose New File
+          </label>
+          {/* Show selected file name if exists */}
+          {files[1] && <div className="selected-file">{files[1].name}</div>}
+        </div>
       </div>
+
+      <button 
+        onClick={processFiles} 
+        disabled={isProcessing || files.length < 2} 
+        className="process-button"
+      >
+        {isProcessing ? 'Processing...' : 'Find Unfollowers'}
+      </button>
+
+      {error && <div className="error-message">{error}</div>}
       
-      {unfollowers.length > 0 && (
-        <div className="results-section">
-          <h2>Unfollower Results</h2>
-          
-          {unfollowers.map((result, index) => (
+      <div className="results-section">
+        <h2>Unfollower Results</h2>
+        {unfollowers.length > 0 ? (
+          unfollowers.map((result, index) => (
             <div key={index} className="unfollower-group">
               <h3>Unfollowers between {result.oldDate} and {result.newDate}</h3>
               <div className="unfollower-list">
@@ -188,9 +182,11 @@ function UploadPage() {
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <p className="no-results">Upload and process your files to see unfollowers</p>
+        )}
+      </div>
     </div>
   );
 }
