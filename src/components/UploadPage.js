@@ -23,23 +23,29 @@ function UploadPage() {
 
   const parseFollowersList = (htmlContent) => {
     // Create a DOM parser
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, 'text/html');
-    
-    // Find all list items that contain followers
-    const followerElements = doc.querySelectorAll('div._a6_q');
-    
-    const followers = [];
-    
-    // Extract follower usernames
-    followerElements.forEach(element => {
-      const usernameElement = element.querySelector('._a6_r');
-      if (usernameElement) {
-        followers.push(usernameElement.textContent.trim());
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlContent, 'text/html');
+  
+  // Find all list items that contain followers
+  const followerElements = doc.querySelectorAll('div._a6-p');
+  
+  const followers = [];
+  
+  // Extract follower usernames
+  followerElements.forEach(element => {
+    // Try to find the username element within each follower element
+    // If the structure is consistent, it might be a direct child or have another class
+    const usernameElement = element.querySelector('span') || element.querySelector('a') || element;
+    if (usernameElement) {
+      const username = usernameElement.textContent.trim();
+      if (username && !followers.includes(username)) {
+        followers.push(username);
       }
-    });
-    
-    return followers;
+    }
+  });
+  
+  console.log("Found followers:", followers);
+  return followers;
   };
 
   const findUnfollowers = (oldFollowers, newFollowers) => {

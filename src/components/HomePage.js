@@ -13,7 +13,7 @@ function HomePage({ userData }) {
   useEffect(() => {
     // In a real app, fetch data from your backend
     const demoStats = {
-      totalFollowers: 1248,
+      totalFollowers: 748,
       recentUnfollowers: 5,
       lastScan: new Date().toISOString()
     };
